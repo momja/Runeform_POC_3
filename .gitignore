@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+output/
+sample_photos/
+downloaded_images/
+uploads/
+brand_data/
+models/
+.DS_Store
+*.egg-info/
