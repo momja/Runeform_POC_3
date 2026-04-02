@@ -28,7 +28,7 @@ ZONE_PADDING = 20  # px padding inside zone bounds
 
 # Hierarchy ordering (higher in list = larger font required)
 HIERARCHY = [ElementType.HEADLINE, ElementType.SUBHEAD, ElementType.BODY]
-MIN_HIERARCHY_GAP = 4  # minimum px difference between levels
+MIN_HIERARCHY_GAP = 3  # minimum px difference between levels
 
 # Multi-solution parameters
 DEFAULT_MAX_SOLUTIONS = 3
@@ -65,30 +65,35 @@ def _build_solver(
         size_vars[zone.name] = var
         zone_element_types[zone.name] = content.element_type
 
-        # Bound constraints
-        solver.add(var >= fsr.min_size)
-        solver.add(var <= fsr.max_size)
-
-        # Step constraint
-        solver.add(var % fsr.step == 0)
-
-        # Zone fitting constraint using actual font metrics
-        metrics = pairing.metrics_for_element(content.element_type.value) if pairing else None
-
+        # Zone fitting constraint: pre-measure with Skia to find valid sizes.
+        # The Or of valid sizes replaces separate bound/step constraints.
         text = content.text
-        text_len = max(len(text), 1)
-        usable_w = max(zone.bounds.width - ZONE_PADDING, 1)
-        usable_h = max(zone.bounds.height - ZONE_PADDING, 1)
-
-        # Scale to integer: multiply ratios by 1000 for precision
-        scale = 1000
-        cwr = int((metrics.char_width_ratio if metrics else 0.60) * scale)
-        lhr = int((metrics.line_height_ratio if metrics else 1.35) * scale)
-
-        # Constraint: text_len * cwr * lhr * var^2 <= usable_w * usable_h * scale^2
-        lhs = text_len * cwr * lhr * var * var
-        rhs = int(usable_w * usable_h) * scale * scale
-        solver.add(lhs <= rhs)
+        if pairing and text:
+            valid_sizes = []
+            for sz in range(fsr.min_size, fsr.max_size + 1, fsr.step):
+                if pairing.text_fits_zone(
+                    text, content.element_type.value, sz,
+                    zone.bounds.width, zone.bounds.height, ZONE_PADDING,
+                ):
+                    valid_sizes.append(sz)
+            if valid_sizes:
+                solver.add(z3.Or(*[var == sz for sz in valid_sizes]))
+            else:
+                solver.add(False)  # No valid size — force unsat
+        else:
+            # Fallback: bound + step + area approximation when no pairing
+            solver.add(var >= fsr.min_size)
+            solver.add(var <= fsr.max_size)
+            solver.add(var % fsr.step == 0)
+            text_len = max(len(text or ""), 1)
+            usable_w = max(zone.bounds.width - ZONE_PADDING, 1)
+            usable_h = max(zone.bounds.height - ZONE_PADDING, 1)
+            scale = 1000
+            cwr = 600  # 0.60 * 1000
+            lhr = 1350  # 1.35 * 1000
+            lhs = text_len * cwr * lhr * var * var
+            rhs = int(usable_w * usable_h) * scale * scale
+            solver.add(lhs <= rhs)
 
     # Hierarchy constraints
     hierarchy_vars: list[tuple[ElementType, z3.ArithRef]] = []

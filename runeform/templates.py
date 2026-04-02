@@ -11,10 +11,10 @@ CANVAS_H = 1080
 M = 60  # margin
 
 # Font size ranges by hierarchy level
-HEADLINE_FSR = FontSizeRange(min_size=28, max_size=72, step=2)
-SUBHEAD_FSR = FontSizeRange(min_size=16, max_size=36, step=2)
-BODY_FSR = FontSizeRange(min_size=12, max_size=24, step=2)
-LOGO_FSR = FontSizeRange(min_size=14, max_size=28, step=2)
+HEADLINE_FSR = FontSizeRange(min_size=90, max_size=160, step=2)
+SUBHEAD_FSR = FontSizeRange(min_size=36, max_size=60, step=2)
+BODY_FSR = FontSizeRange(min_size=27, max_size=33, step=2)
+LOGO_FSR = FontSizeRange(min_size=27, max_size=33, step=2)
 
 # ---------------------------------------------------------------------------
 # single_event_hero — 3 templates (event with image)
@@ -27,34 +27,34 @@ HERO_LEFT_TEXT_RIGHT = Template(
     zones=[
         Zone(
             name="hero",
-            bounds=Rect(x=M, y=M, width=500, height=960),
+            bounds=Rect(x=M, y=M, width=460, height=960),
             visual_weight=1.0,
             allowed_elements=[ElementType.HERO],
         ),
         Zone(
             name="headline",
-            bounds=Rect(x=600, y=M, width=420, height=200),
+            bounds=Rect(x=560, y=M, width=460, height=440),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="subhead",
-            bounds=Rect(x=600, y=280, width=420, height=100),
+            bounds=Rect(x=560, y=520, width=460, height=120),
             visual_weight=0.5,
             allowed_elements=[ElementType.SUBHEAD],
             font_size_range=SUBHEAD_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=600, y=420, width=420, height=300),
+            bounds=Rect(x=560, y=660, width=460, height=200),
             visual_weight=0.4,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
         ),
         Zone(
             name="logo",
-            bounds=Rect(x=600, y=860, width=140, height=140),
+            bounds=Rect(x=560, y=880, width=140, height=140),
             visual_weight=0.3,
             allowed_elements=[ElementType.LOGO],
             font_size_range=LOGO_FSR,
@@ -75,21 +75,21 @@ HERO_FULL_OVERLAY = Template(
         ),
         Zone(
             name="headline",
-            bounds=Rect(x=M, y=640, width=700, height=160),
+            bounds=Rect(x=M, y=380, width=960, height=360),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="subhead",
-            bounds=Rect(x=M, y=820, width=500, height=70),
+            bounds=Rect(x=M, y=760, width=700, height=120),
             visual_weight=0.5,
             allowed_elements=[ElementType.SUBHEAD],
             font_size_range=SUBHEAD_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=M, y=910, width=500, height=110),
+            bounds=Rect(x=M, y=900, width=700, height=120),
             visual_weight=0.4,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
@@ -111,34 +111,34 @@ HERO_TOP_TEXT_BOTTOM = Template(
     zones=[
         Zone(
             name="hero",
-            bounds=Rect(x=M, y=M, width=960, height=520),
+            bounds=Rect(x=M, y=M, width=960, height=400),
             visual_weight=1.0,
             allowed_elements=[ElementType.HERO],
         ),
         Zone(
             name="headline",
-            bounds=Rect(x=M, y=620, width=700, height=140),
+            bounds=Rect(x=M, y=480, width=960, height=280),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="subhead",
-            bounds=Rect(x=M, y=770, width=500, height=70),
+            bounds=Rect(x=M, y=780, width=700, height=100),
             visual_weight=0.5,
             allowed_elements=[ElementType.SUBHEAD],
             font_size_range=SUBHEAD_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=M, y=860, width=500, height=120),
+            bounds=Rect(x=M, y=900, width=700, height=100),
             visual_weight=0.4,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
         ),
         Zone(
             name="logo",
-            bounds=Rect(x=860, y=860, width=140, height=140),
+            bounds=Rect(x=860, y=880, width=140, height=140),
             visual_weight=0.3,
             allowed_elements=[ElementType.LOGO],
             font_size_range=LOGO_FSR,
@@ -164,21 +164,21 @@ TEXT_CENTERED_STACK = Template(
         ),
         Zone(
             name="headline",
-            bounds=Rect(x=100, y=220, width=880, height=280),
+            bounds=Rect(x=M, y=200, width=960, height=400),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="subhead",
-            bounds=Rect(x=200, y=540, width=680, height=100),
+            bounds=Rect(x=100, y=620, width=880, height=120),
             visual_weight=0.5,
             allowed_elements=[ElementType.SUBHEAD],
             font_size_range=SUBHEAD_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=200, y=680, width=680, height=280),
+            bounds=Rect(x=100, y=760, width=880, height=220),
             visual_weight=0.4,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
@@ -193,28 +193,28 @@ TEXT_BOLD_TITLE = Template(
     zones=[
         Zone(
             name="headline",
-            bounds=Rect(x=M, y=M, width=580, height=500),
+            bounds=Rect(x=M, y=M, width=620, height=560),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="subhead",
-            bounds=Rect(x=M, y=580, width=580, height=120),
+            bounds=Rect(x=M, y=640, width=620, height=120),
             visual_weight=0.5,
             allowed_elements=[ElementType.SUBHEAD],
             font_size_range=SUBHEAD_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=680, y=M, width=340, height=600),
+            bounds=Rect(x=720, y=M, width=300, height=600),
             visual_weight=0.4,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
         ),
         Zone(
             name="logo",
-            bounds=Rect(x=680, y=860, width=160, height=140),
+            bounds=Rect(x=720, y=860, width=160, height=140),
             visual_weight=0.3,
             allowed_elements=[ElementType.LOGO],
             font_size_range=LOGO_FSR,
@@ -233,21 +233,21 @@ ANNOUNCEMENT_CENTERED = Template(
     zones=[
         Zone(
             name="headline",
-            bounds=Rect(x=100, y=200, width=880, height=300),
+            bounds=Rect(x=M, y=100, width=960, height=480),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=160, y=560, width=760, height=300),
+            bounds=Rect(x=100, y=620, width=880, height=260),
             visual_weight=0.5,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,
         ),
         Zone(
             name="logo",
-            bounds=Rect(x=440, y=900, width=200, height=120),
+            bounds=Rect(x=440, y=910, width=200, height=120),
             visual_weight=0.3,
             allowed_elements=[ElementType.LOGO],
             font_size_range=LOGO_FSR,
@@ -262,14 +262,14 @@ ANNOUNCEMENT_SPLIT = Template(
     zones=[
         Zone(
             name="headline",
-            bounds=Rect(x=M, y=M, width=960, height=400),
+            bounds=Rect(x=M, y=M, width=960, height=520),
             visual_weight=0.9,
             allowed_elements=[ElementType.HEADLINE],
             font_size_range=HEADLINE_FSR,
         ),
         Zone(
             name="body",
-            bounds=Rect(x=M, y=520, width=700, height=400),
+            bounds=Rect(x=M, y=600, width=700, height=320),
             visual_weight=0.5,
             allowed_elements=[ElementType.BODY],
             font_size_range=BODY_FSR,

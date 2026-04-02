@@ -83,6 +83,49 @@ class FontFamily:
         return metrics
 
 
+def measure_text_block(
+    text: str, font: skia.Font, max_width: float,
+) -> tuple[float, float]:
+    """Measure the bounding box of word-wrapped text.
+
+    Returns (width, height) of the text block when wrapped to max_width.
+    Uses the same word-wrap logic as the renderer.
+    """
+    words = text.split()
+    if not words:
+        return (0.0, 0.0)
+
+    # Word-wrap
+    lines: list[str] = []
+    current_line = words[0]
+    for word in words[1:]:
+        test = current_line + " " + word
+        if font.measureText(test) <= max_width:
+            current_line = test
+        else:
+            lines.append(current_line)
+            current_line = word
+    lines.append(current_line)
+
+    # Measure each line width
+    max_line_w = max(font.measureText(line) for line in lines)
+
+    # Compute height using visual bounds for tight measurement
+    metrics = font.getMetrics()
+    line_height = -metrics.fAscent + metrics.fDescent + metrics.fLeading
+    blobs = [skia.TextBlob.MakeFromShapedText(line, font) for line in lines]
+    blobs = [b for b in blobs if b is not None]
+
+    if not blobs:
+        return (max_line_w, line_height * len(lines))
+
+    first_top = blobs[0].bounds().fTop
+    last_bottom = blobs[-1].bounds().fBottom
+    total_height = -first_top + (len(blobs) - 1) * line_height + last_bottom
+
+    return (max_line_w, total_height)
+
+
 class FontPairing:
     """A headline + body font combination."""
 
@@ -111,6 +154,18 @@ class FontPairing:
         if role == "headline":
             return self.headline.metrics(weight)
         return self.body.metrics(weight)
+
+    def text_fits_zone(
+        self, text: str, element_type: str, font_size: int,
+        zone_width: float, zone_height: float, padding: float = 20,
+    ) -> bool:
+        """Check if text at a given font size fits within zone bounds."""
+        role, weight = self.ELEMENT_CONFIG.get(element_type, ("body", 400))
+        font = self.font_for(role, font_size, weight)
+        usable_w = zone_width - padding
+        usable_h = zone_height - padding
+        w, h = measure_text_block(text, font, usable_w)
+        return w <= usable_w and h <= usable_h
 
 
 # ---------------------------------------------------------------------------
