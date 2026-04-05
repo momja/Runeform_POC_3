@@ -15,14 +15,16 @@ WORKDIR /app
 # Copy dependency files first for layer caching
 COPY pyproject.toml uv.lock ./
 
-# Install deps (CPU-only torch to save ~1.5GB)
-RUN uv sync --frozen --no-dev && \
-    .venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cpu --quiet
+# Install dependencies only (not the project itself — source isn't copied yet)
+RUN uv sync --frozen --no-dev --no-install-project
 
 # Copy application code and assets
 COPY server.py ./
 COPY runeform/ ./runeform/
 COPY fonts/ ./fonts/
+
+# Now install the project itself
+RUN uv sync --frozen --no-dev
 
 # Create runtime directories
 RUN mkdir -p output uploads brand_data models
