@@ -7,7 +7,6 @@ Font pairings provide distinct headline + body typefaces.
 from io import BytesIO
 from pathlib import Path
 
-import cairosvg
 import skia
 from PIL import Image
 
@@ -106,10 +105,23 @@ def _draw_text_in_zone(
 
 
 def _open_image(path: Path) -> Image.Image:
-    """Open an image file, converting SVG to PNG in memory via cairosvg."""
+    """Open an image file, converting SVG to PNG in memory via Skia."""
     if path.suffix.lower() == ".svg":
-        png_bytes = cairosvg.svg2png(url=str(path), output_width=1080)
-        return Image.open(BytesIO(png_bytes))
+        svg_data = path.read_bytes()
+        stream = skia.MemoryStream(svg_data)
+        dom = skia.SVGDOM.MakeFromStream(stream)
+        if dom is None:
+            raise ValueError(f"Failed to parse SVG: {path}")
+        container_size = dom.containerSize()
+        w = int(container_size.width()) or 1080
+        h = int(container_size.height()) or 1080
+        surface = skia.Surface(w, h)
+        canvas = surface.getCanvas()
+        canvas.clear(skia.ColorTRANSPARENT)
+        dom.render(canvas)
+        sk_image = surface.makeImageSnapshot()
+        png_bytes = sk_image.encodeToData(skia.kPNG)
+        return Image.open(BytesIO(bytes(png_bytes)))
     return Image.open(path)
 
 

@@ -40,7 +40,7 @@ Requires `ANTHROPIC_API_KEY` in `.env` for Claude ranking. Without it, ranking f
 
 5. **Score** (`scoring.py`) — Four heuristics (weight balance, focal hierarchy, breathing room, rule of thirds). Filters weak layouts before rendering.
 
-6. **Render** (`render.py`) — Skia + HarfBuzz text shaping. Uses Z3-solved font sizes directly (no bisection). Photos scale-to-fill + center-crop. SVG logo support via cairosvg.
+6. **Render** (`render.py`) — Skia + HarfBuzz text shaping. Uses Z3-solved font sizes directly (no bisection). Photos scale-to-fill + center-crop. SVG logo support via Skia SVGDOM.
 
 7. **Rank** (`ranking.py`) — Claude Haiku ranks rendered PNGs. Falls back to highest heuristic score.
 
@@ -92,10 +92,10 @@ Low-res hero images are upscaled via Real-ESRGAN (spandrel + torch). Computed on
 - Data shape is inferred before template selection. Content type drives filtering.
 - Font rendering uses Skia + HarfBuzz with variable Google Fonts.
 - Never distort images — scale-to-fill + center-crop.
-- SVGs are supported via cairosvg conversion.
+- SVGs are rendered via Skia's SVGDOM.
 
 ## Dependencies
 
-Key dependencies: `z3-solver`, `skia-python`, `fastapi`, `anthropic`, `spandrel`, `torch`, `cairosvg`.
+Key dependencies: `z3-solver`, `skia-python`, `fastapi`, `anthropic`, `spandrel`, `torch`.
 
 Test extras: `pytest`, `playwright`, `pytest-playwright`.

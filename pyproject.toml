@@ -12,7 +12,6 @@ dependencies = [
     "python-multipart>=0.0.20",
     "python-dotenv>=1.2.2",
     "z3-solver>=4.12",
-    "cairosvg>=2.7",
     "spandrel>=0.4",
     "torch>=2.0",
     "skia-python>=120",
